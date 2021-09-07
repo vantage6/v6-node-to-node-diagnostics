@@ -28,9 +28,11 @@ def echo(client, data, *args, **kwargs):
 
     # create a new task for all organizations in the collaboration.
     info("Dispatching node-tasks")
+    # TODO: Replace with actual vantage6 api call
     task = mock.create_new_task(ids)
 
     # Retrieve address of algorithm
+    # TODO: Replace with actual vantage6 api call
     result_objects = mock.get_results(task_id=task.get("id"))
 
     succeeded_echos = [_check_echo(mock.get_node_address(r), r['port']) for r in result_objects]
