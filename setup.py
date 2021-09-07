@@ -17,7 +17,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(
     name='node_to_node_diagnostics',
     version="1.0.0",
-    description='vantage6 biolerplate',
+    description='vantage6 node-to-node diagnostics',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/IKNL/v6_boilerplate-py',
