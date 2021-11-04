@@ -15,7 +15,7 @@ from time import sleep
 
 MESSAGE = b'Hello Python\n'
 ECHO_TASK = 'echo'
-WAIT = 5
+WAIT = 10
 
 
 def echo(client, data, *args, **kwargs):
@@ -40,6 +40,8 @@ def echo(client, data, *args, **kwargs):
     result_objects = client.get_results(task_id=task.get("id"))
 
     succeeded_echos = []
+
+    info(f'Echoing to {len(result_objects)} algorithms...')
     for r in result_objects:
         ip, port = _get_address_from_result(r)
 
