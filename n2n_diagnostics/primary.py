@@ -8,11 +8,14 @@ When a return statement is reached the result is send to the central
 server after encryption.
 """
 import socket
-from vantage6.tools.util import info
+from typing import Any, Dict, Tuple
 
-from node_to_node_diagnostics import mock
+from vantage6.tools.util import info
+from time import sleep
 
 MESSAGE = b'Hello Python\n'
+ECHO_TASK = 'echo'
+WAIT = 5
 
 
 def echo(client, data, *args, **kwargs):
@@ -28,17 +31,30 @@ def echo(client, data, *args, **kwargs):
 
     # create a new task for all organizations in the collaboration.
     info("Dispatching node-tasks")
-    # TODO: Replace with actual vantage6 api call
-    task = mock.create_new_task(ids)
+    task = client.create_new_task(input_={'method': ECHO_TASK}, organization_ids=ids)
 
-    # Retrieve address of algorithm
-    # TODO: Replace with actual vantage6 api call
-    result_objects = mock.get_results(task_id=task.get("id"))
+    info(f'Waiting {WAIT} seconds for the algorithm containers to boot up...')
+    sleep(WAIT)
 
-    succeeded_echos = [_check_echo(mock.get_node_address(r), r['port']) for r in result_objects]
+    # Ip address and port of algorithm can be found in results model
+    result_objects = client.get_results(task_id=task.get("id"))
 
-    info(f'Succeeded echos: {succeeded_echos}')
+    succeeded_echos = []
+    for r in result_objects:
+        ip, port = _get_address_from_result(r)
+
+        info(f'Sending message to {ip}:{port}')
+        succeeded_echos.append(_check_echo(ip, port))
+
+        info(f'Succeeded echos: {succeeded_echos}')
     return succeeded_echos
+
+
+def _get_address_from_result(result: Dict[str, Any]) -> Tuple[str, int]:
+    address = result['node']['ip']
+    port = result['port']
+
+    return address, port
 
 
 def _check_echo(host, port):

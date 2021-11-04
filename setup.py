@@ -15,7 +15,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 # setup the package
 setup(
-    name='node_to_node_diagnostics',
+    name='n2n_diagnostics',
     version="1.0.0",
     description='vantage6 node-to-node diagnostics',
     long_description=long_description,
