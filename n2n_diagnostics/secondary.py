@@ -13,6 +13,8 @@ def RPC_echo(data, *args, **kwargs):
     """
     asyncio.run(_serve_echo())
 
+    return ''
+
 
 async def _serve_echo():
     info('Start')

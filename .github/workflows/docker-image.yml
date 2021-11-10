@@ -10,7 +10,7 @@ jobs:
 
   docker-push:
     env:
-      IMAGE_NAME: "carrrier-harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics:latest"
+      IMAGE_NAME: "carrrier-harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics"
       HARBOR_SERVER: "carrrier-harbor.carrier-mu.src.surf-hosted.nl"
     runs-on: ubuntu-latest
     steps:
