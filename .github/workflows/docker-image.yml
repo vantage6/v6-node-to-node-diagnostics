@@ -4,15 +4,24 @@ on:
   push:
     branches: [ master ]
 
+
+
 jobs:
 
-  build:
-
+  docker-push:
+    env:
+      IMAGE_NAME: "carrier-harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics:latest"
+      HARBOR_SERVER: "carrrier-harbor.carrier-mu.src.surf-hosted.nl"
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
+
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag {image_name}:$(date +%s)
+      run: docker build . --file Dockerfile --tag $IMAGE_NAME:$(date +%s)
+
+    - name: Log into harbor
+      run: docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_SERVER
+    - name: Push the Docker image
+      run: docker push $IMAGE_NAME
       
       
