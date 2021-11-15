@@ -15,12 +15,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
+    
+    - name: Docker Login
+      run: echo "${{ secrets.HARBOR_PASSWORD }}" | docker login ${{env.HARBOR_SERVER}} --username "${{ secrets.HARBOR_USER }}" --password-stdin
+    
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME:$(date +%s)
 
-    - name: Log into harbor
-      run: docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_SERVER
     - name: Push the Docker image
       run: docker push $IMAGE_NAME
       
