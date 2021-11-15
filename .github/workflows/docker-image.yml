@@ -15,12 +15,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-
+    
+    - name: Docker Login
+      uses: docker/login-action@v1.10.0
+      with:
+        # Server address of Docker registry. If not set then will default to Docker Hub
+        registry: $HARBOR_SERVER
+        # Username used to log against the Docker registry
+        username: $HARBOR_USER
+        # Password or personal access token used to log against the Docker registry
+        password: $HARBOR_PASSWORD
+    
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME:$(date +%s)
 
-    - name: Log into harbor
-      run: docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_SERVER
     - name: Push the Docker image
       run: docker push $IMAGE_NAME
       
