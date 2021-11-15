@@ -20,11 +20,11 @@ jobs:
       uses: docker/login-action@v1.10.0
       with:
         # Server address of Docker registry. If not set then will default to Docker Hub
-        registry: $HARBOR_SERVER
+        registry: ${{ env.HARBOR_SERVER}}
         # Username used to log against the Docker registry
-        username: $HARBOR_USER
+        username: ${{ env.HARBOR_USER }}
         # Password or personal access token used to log against the Docker registry
-        password: $HARBOR_PASSWORD
+        password: ${{env.HARBOR_PASSWORD}}
     
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag $IMAGE_NAME:$(date +%s)
