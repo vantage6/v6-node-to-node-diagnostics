@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from pathlib import Path
 from time import sleep
 from typing import List
@@ -8,10 +10,11 @@ import vantage6.client as v6client
 IMAGE = 'carrrier-harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics'
 RETRY = 5
 SLEEP = 10
+DEFAULT_METHOD = 'echo'
 
 
 def test_on_v6(host: str, port: int, username: str, password: str, private_key: str,
-               collaboration_id: int, *organization_ids: int):
+               collaboration_id: int, *, method: str = DEFAULT_METHOD):
     client = v6client.Client(host, port, verbose=True)
 
     client.authenticate(username, password)
@@ -27,7 +30,7 @@ def test_on_v6(host: str, port: int, username: str, password: str, private_key: 
     task = client.task.create(collaboration=collaboration_id, organizations=[master_node],
                               name='test_echo',
                               image=IMAGE, description='test',
-                              input={'method': 'echo', 'master': True,
+                              input={'method': method, 'master': True,
                                      'kwargs': {'exclude_orgs': [master_node]}})
     print(task)
 

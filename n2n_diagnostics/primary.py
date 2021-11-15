@@ -16,7 +16,11 @@ import traceback
 
 MESSAGE = b'Hello Python\n'
 ECHO_TASK = 'echo'
-WAIT = 10
+WAIT = 4
+TIMEOUT = 20
+ENDLESS_SLEEP = 10000
+WAIT_TASK = 'wait'
+RETRY = 10
 
 
 def echo(client, data, exclude_orgs=None, **kwargs):
@@ -28,12 +32,15 @@ def echo(client, data, exclude_orgs=None, **kwargs):
         raise e
 
 
+def wait(client, data, exclude_orgs=None, **kwargs):
+    ids = get_secondary_organizations(client, exclude_orgs)
+    info("Dispatching node-tasks")
+    task = client.create_new_task(input_={'method': WAIT_TASK}, organization_ids=ids)
+    sleep(ENDLESS_SLEEP)
+
+
 def try_echo(client, exclude_orgs):
-    organizations = client.get_organizations_in_my_collaboration()
-    info(str(exclude_orgs))
-    ids = [organization.get('id') for organization in organizations]
-    if exclude_orgs:
-        ids = [i for i in ids if i not in exclude_orgs]
+    ids = get_secondary_organizations(client, exclude_orgs)
     # The input fot the algorithm is the same for all organizations
     # in this case
     info("Defining input parameters")
@@ -44,11 +51,12 @@ def try_echo(client, exclude_orgs):
     info("Dispatching node-tasks")
     task = client.create_new_task(input_={'method': ECHO_TASK}, organization_ids=ids)
     info(f'Waiting {WAIT} seconds for the algorithm containers to boot up...')
-    sleep(WAIT)
+
     # Ip address and port of algorithm can be found in results model
-    result_objects = client.get_results(task_id=task.get("id"))
+    result_objects = _await_port_numbers(client, task.get('id'))
     succeeded_echos = []
     info(f'Echoing to {len(result_objects)} algorithms...')
+
     for r in result_objects:
         ip, port = _get_address_from_result(r)
 
@@ -59,8 +67,42 @@ def try_echo(client, exclude_orgs):
     return succeeded_echos
 
 
+def _await_port_numbers(client, task_id):
+    result_objects = client.get_other_node_ip_and_port(task_id=task_id)
+
+    c = 0
+    while not _are_ports_available(result_objects):
+        if c >= RETRY:
+            raise Exception('Retried too many times')
+
+        info('Polling results for port numbers...')
+        result_objects = client.get_other_node_ip_and_port(task_id=task_id)
+        c += 1
+        sleep(4)
+
+    return result_objects
+
+
+def _are_ports_available(result_objects):
+    for r in result_objects:
+        _, port = _get_address_from_result(r)
+        if not port:
+            return False
+
+    return True
+
+
+def get_secondary_organizations(client, exclude_orgs):
+    organizations = client.get_organizations_in_my_collaboration()
+    info(str(exclude_orgs))
+    ids = [organization.get('id') for organization in organizations]
+    if exclude_orgs:
+        ids = [i for i in ids if i not in exclude_orgs]
+    return ids
+
+
 def _get_address_from_result(result: Dict[str, Any]) -> Tuple[str, int]:
-    address = result['node']['ip']
+    address = result['ip']
     port = result['port']
 
     return address, port
@@ -70,6 +112,7 @@ def _check_echo(host, port):
     info(f'Checking echo on {host}:{port}')
 
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(TIMEOUT)
         s.connect((host, port))
         s.sendall(MESSAGE)
         response = s.recv(len(MESSAGE))

@@ -1,10 +1,11 @@
 import asyncio
-
+from time import sleep
 from vantage6.tools.util import info
 
-DEFAULT_PORT = 9999
-LOCALHOST = '127.0.0.1'
+DEFAULT_PORT = 8888
+HOST = '0.0.0.0'
 TIMEOUT = 60
+ENDLESS_SLEEP = 10000
 
 
 def RPC_echo(data, *args, **kwargs):
@@ -16,9 +17,18 @@ def RPC_echo(data, *args, **kwargs):
     return ''
 
 
+def RPC_wait(data, *args, **kwargs):
+    try:
+        sleep(ENDLESS_SLEEP)
+    except KeyboardInterrupt as e:
+        pass
+    finally:
+        return ''
+
+
 async def _serve_echo():
     info('Start')
-    server = await asyncio.start_server(_handle_echo, LOCALHOST, DEFAULT_PORT)
+    server = await asyncio.start_server(_handle_echo, HOST, DEFAULT_PORT)
 
     info(f'Running echo server for {TIMEOUT} seconds...')
 
