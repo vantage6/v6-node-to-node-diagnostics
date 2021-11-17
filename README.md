@@ -7,8 +7,8 @@
 
 --------------------
 
-# v6-boilerplate-py
-This algoithm is part of the [vantage6](https://vantage6.ai) solution. Vantage6 allowes to execute computations on federated datasets. This repository provides a boilerplate for new algorithms.
+# v6-n2n-diagnostics
+This algoithm is part of the [vantage6](https://vantage6.ai) solution. Vantage6 allows to execute computations on federated datasets. This repository provides a boilerplate for new algorithms.
 
 ## Usage
 First clone the repository.
@@ -24,7 +24,7 @@ Update the `ARG PKG_NAME=...` to the name of your algorithm (preferable the same
 ### LICENCE
 Determine which license suits your project.
 
-### {algorithm_name}/__init__.py
+### n2n-diagnostics/__init__.py
 Contains all the methods that can be called at the nodes. All __regular__ definitions in this file that have the prefix `RPC_` are callable by an external party. If you define a __master__ method, it should *not* contain the prefix! The __master__ and __regular__ definitions both have there own signature. __Master__ definitions have a __client__ and __data__ argument (and possible some other arguments), while the __regular__ definition only has the __data__ argument. The data argument is a [pandas dataframe](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame) and the client argument is a `ClientContainerProtocol` or `ClientMockProtocol` from the [vantage6-toolkit](https://github.com/IKNL/vantage6-toolkit). The master and regular definitions signatures should look like:
 ```python
 def some_master_name(client, data, *args, **kwargs):
