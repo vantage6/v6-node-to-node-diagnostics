@@ -8,30 +8,36 @@ import clize
 import vantage6.client as v6client
 
 IMAGE = 'carrrier-harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics'
-RETRY = 5
+RETRY = 10
 SLEEP = 10
 DEFAULT_METHOD = 'echo'
 
 
 def test_on_v6(host: str, port: int, username: str, password: str, private_key: str,
-               collaboration_id: int, *, method: str = DEFAULT_METHOD):
+               collaboration_id: int, *exclude, method: str = DEFAULT_METHOD):
     client = v6client.Client(host, port, verbose=True)
 
     client.authenticate(username, password)
     client.setup_encryption(private_key)
 
     # Get organizations
-    organizations = client.collaboration.list()[0]['organizations']
-    print(organizations)
+    all_organizations = client.collaboration.list()[0]['organizations']
+    org_ids = []
 
-    org_ids = [o['id'] for o in organizations]
+    for o in all_organizations:
+        org = client.organization.get(o['id'])
+
+        if org['nodes']:
+            org_ids.append(o['id'])
+
+    print(org_ids)
     master_node = org_ids[0]
 
     task = client.task.create(collaboration=collaboration_id, organizations=[master_node],
                               name='test_echo',
                               image=IMAGE, description='test',
                               input={'method': method, 'master': True,
-                                     'kwargs': {'exclude_orgs': [master_node]}})
+                                     'kwargs': {'exclude_orgs': [master_node] + list(exclude)}})
     print(task)
 
     result = {}
