@@ -8,36 +8,29 @@
 --------------------
 
 # v6-n2n-diagnostics
-This algoithm is part of the [vantage6](https://vantage6.ai) solution. Vantage6 allows to execute computations on federated datasets. This repository provides a boilerplate for new algorithms.
+This algorithm is part of the [vantage6](https://vantage6.ai) solution. Vantage6 allows to 
+execute computations on federated datasets. This repository provides a boilerplate for new algorithms.
 
-## Usage
-First clone the repository.
-```bash
-# Clone this repository
-git clone https://github.com/IKNL/v6-boilerplate-py
-```
-Rename the directories to something that fits your algorithm, we use the convention `v6-{name}-{langauge}`. Then you can edit the following files:
+# How to use
+This vantage6 algorithm includes a handy client class that helps you run its methods as a 
+vantage6 user.
 
-### Dockerfile
-Update the `ARG PKG_NAME=...` to the name of your algorithm (preferable the same as the directory name).
-
-### LICENCE
-Determine which license suits your project.
-
-### n2n-diagnostics/__init__.py
-Contains all the methods that can be called at the nodes. All __regular__ definitions in this file that have the prefix `RPC_` are callable by an external party. If you define a __master__ method, it should *not* contain the prefix! The __master__ and __regular__ definitions both have there own signature. __Master__ definitions have a __client__ and __data__ argument (and possible some other arguments), while the __regular__ definition only has the __data__ argument. The data argument is a [pandas dataframe](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html?highlight=dataframe#pandas.DataFrame) and the client argument is a `ClientContainerProtocol` or `ClientMockProtocol` from the [vantage6-toolkit](https://github.com/IKNL/vantage6-toolkit). The master and regular definitions signatures should look like:
 ```python
-def some_master_name(client, data, *args, **kwargs):
-    # do something
-    pass
+from vantage6.client import v6client
 
-def RPC_some_regular_method(data, *args, **kwargs):
-    # do something
-    pass
+client = v6client.Client(YOUR_V6_HOST, YOUR_V6_PORT, verbose=True)
+
+client.authenticate(YOUR_USERNAME, YOUR_PASSWORD)
+client.setup_encryption(YOUR_PRIVATE_KEY)
+
+
+n2nclient = N2NDiagnosticsClient(client)
+
+# Master node should be the organization id of the node that you want to run the primary 
+# algorithm on
+# List any organizations from the collaboration that shouldn't participate as a list in exclude
+task = n2nclient.echo(master_node, collaboration_id, exclude)
 ```
-
-### setup.py
-In order for the Docker image to find the methods the algorithm needs to be installable. Make sure the *name* matches the `ARG PKG_NAME` in the Dockerfile.
 
 ## Read more
 See the [documentation](https://docs.vantage6.ai/) for detailed instructions on how to install and use the server and nodes.

@@ -7,6 +7,8 @@ from typing import List
 import clize
 import vantage6.client as v6client
 
+from n2n_diagnostics.client import N2NDiagnosticsClient
+
 IMAGE = 'carrrier-harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics'
 RETRY = 10
 SLEEP = 10
@@ -33,11 +35,9 @@ def test_on_v6(host: str, port: int, username: str, password: str, private_key: 
     print(org_ids)
     master_node = org_ids[0]
 
-    task = client.task.create(collaboration=collaboration_id, organizations=[master_node],
-                              name='test_echo',
-                              image=IMAGE, description='test',
-                              input={'method': method, 'master': True,
-                                     'kwargs': {'exclude_orgs': [master_node] + list(exclude)}})
+    n2nclient = N2NDiagnosticsClient(client)
+    task = n2nclient.echo(master_node, collaboration_id, exclude)
+
     print(task)
 
     result = {}
