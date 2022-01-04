@@ -53,12 +53,11 @@ def try_echo(client, exclude_orgs):
     info(f'Waiting {WAIT} seconds for the algorithm containers to boot up...')
 
     # Ip address and port of algorithm can be found in results model
-    result_objects = _await_port_numbers(client, task.get('id'))
+    addresses = _await_port_numbers(client, task.get('id'))
     succeeded_echos = []
-    info(f'Echoing to {len(result_objects)} algorithms...')
+    info(f'Echoing to {len(addresses)} algorithms...')
 
-    for r in result_objects:
-        ip, port = _get_address_from_result(r)
+    for ip, port in addresses:
 
         info(f'Sending message to {ip}:{port}')
         succeeded_echos.append(_check_echo(ip, port))
@@ -69,27 +68,25 @@ def try_echo(client, exclude_orgs):
 
 def _await_port_numbers(client, task_id):
     result_objects = client.get_other_node_ip_and_port(task_id=task_id)
-
     c = 0
-    while not _are_ports_available(result_objects):
+    while len(list(_get_available_addresses(result_objects))) < len(result_objects):
         if c >= RETRY:
-            raise Exception('Retried too many times')
+            info('Cannot contact all organizations!')
+            break
 
         info('Polling results for port numbers...')
         result_objects = client.get_other_node_ip_and_port(task_id=task_id)
         c += 1
         sleep(4)
 
-    return result_objects
+    return list(_get_available_addresses(result_objects))
 
 
-def _are_ports_available(result_objects):
+def _get_available_addresses(result_objects)  -> Tuple[int, str]:
     for r in result_objects:
-        _, port = _get_address_from_result(r)
-        if not port:
-            return False
-
-    return True
+        ip, port = _get_address_from_result(r)
+        if port:
+            yield ip, port
 
 
 def get_secondary_organizations(client, exclude_orgs):
