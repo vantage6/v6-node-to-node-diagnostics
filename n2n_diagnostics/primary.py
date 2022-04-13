@@ -10,6 +10,7 @@ server after encryption.
 import socket
 from typing import Any, Dict, Tuple
 
+from vantage6.client import ContainerClient
 from vantage6.tools.util import info
 from time import sleep
 import traceback
@@ -66,8 +67,8 @@ def try_echo(client, exclude_orgs):
     return succeeded_echos
 
 
-def _await_port_numbers(client, task_id):
-    result_objects = client.get_other_node_ip_and_port(task_id=task_id)
+def _await_port_numbers(client:ContainerClient, task_id):
+    result_objects = client.get_algorithm_addresses(task_id=task_id)
     c = 0
     while len(list(_get_available_addresses(result_objects))) < len(result_objects):
         if c >= RETRY:
@@ -75,7 +76,7 @@ def _await_port_numbers(client, task_id):
             break
 
         info('Polling results for port numbers...')
-        result_objects = client.get_other_node_ip_and_port(task_id=task_id)
+        result_objects = client.get_algorithm_addresses(task_id=task_id)
         c += 1
         sleep(4)
 
