@@ -1,13 +1,12 @@
 [tool.poetry]
 name = "n2n_diagnostics"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Djura Smits <djura.smits@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-vantage6 = "3.1.0"
-vantage6-client = "3.1.0"
+python = "^3.7"
+vantage6-client = "~3.0"
 
 [tool.poetry.dev-dependencies]
 clize = "^4.2.1"

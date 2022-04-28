@@ -68,7 +68,7 @@ def try_echo(client, exclude_orgs):
 
 
 def _await_port_numbers(client:ContainerClient, task_id):
-    result_objects = client.get_algorithm_addresses(task_id=task_id)
+    result_objects = client.get_other_node_ip_and_port(task_id=task_id)
     c = 0
     while len(list(_get_available_addresses(result_objects))) < len(result_objects):
         if c >= RETRY:
@@ -76,7 +76,7 @@ def _await_port_numbers(client:ContainerClient, task_id):
             break
 
         info('Polling results for port numbers...')
-        result_objects = client.get_algorithm_addresses(task_id=task_id)
+        result_objects = client.get_other_node_ip_and_port(task_id=task_id)
         c += 1
         sleep(4)
 
