@@ -1,6 +1,6 @@
 import vantage6.client as v6client
 
-IMAGE = 'carrrier-harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics'
+IMAGE = 'harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics'
 
 
 class N2NDiagnosticsClient:
