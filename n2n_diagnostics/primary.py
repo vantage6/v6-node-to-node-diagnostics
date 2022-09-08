@@ -24,24 +24,24 @@ WAIT_TASK = 'wait'
 RETRY = 10
 
 
-def echo(client, data, exclude_orgs=None, **kwargs):
+def echo(client, data, other_nodes, **kwargs):
     try:
-        return try_echo(client, exclude_orgs)
+        return try_echo(client, other_nodes)
     except Exception as e:
         info('Exception!')
         info(traceback.format_exc())
         raise e
 
 
-def wait(client, data, exclude_orgs=None, **kwargs):
-    ids = get_secondary_organizations(client, exclude_orgs)
+def wait(client: ContainerClient, data, other_nodes, **kwargs):
+
     info("Dispatching node-tasks")
-    task = client.create_new_task(input_={'method': WAIT_TASK}, organization_ids=ids)
+    task = client.create_new_task(input_={'method': WAIT_TASK}, organization_ids=other_nodes)
     sleep(ENDLESS_SLEEP)
 
 
-def try_echo(client, exclude_orgs):
-    ids = get_secondary_organizations(client, exclude_orgs)
+def try_echo(client, other_nodes):
+    #ids = get_secondary_organizations(client, exclude_orgs)
     # The input fot the algorithm is the same for all organizations
     # in this case
     info("Defining input parameters")
@@ -50,7 +50,7 @@ def try_echo(client, exclude_orgs):
     }
     # create a new task for all organizations in the collaboration.
     info("Dispatching node-tasks")
-    task = client.create_new_task(input_={'method': ECHO_TASK}, organization_ids=ids)
+    task = client.create_new_task(input_={'method': ECHO_TASK}, organization_ids=other_nodes)
     info(f'Waiting {WAIT} seconds for the algorithm containers to boot up...')
 
     # Ip address and port of algorithm can be found in results model

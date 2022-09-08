@@ -5,17 +5,17 @@ IMAGE = 'harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics'
 
 class N2NDiagnosticsClient:
 
-    def __init__(self, client: v6client.Client):
+    def __init__(self, client: v6client.Client, image=IMAGE):
         self.client = client
+        self.image = image
 
-    def echo(self, master_node, collaboration_id, exclude_orgs):
-        exclude_orgs = [master_node] + list(exclude_orgs)
+    def echo(self, master_node, collaboration_id, other_nodes):
         task = self.client.task.create(collaboration=collaboration_id,
                                        organizations=[master_node],
                                        name='test_echo',
-                                       image=IMAGE, description='test',
+                                       image=self.image, description='test',
                                        input={'method': 'echo', 'master': True,
                                               'kwargs': {
-                                                  'exclude_orgs': exclude_orgs}})
+                                                  'other_nodes': other_nodes}})
 
         return task
