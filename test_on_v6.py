@@ -20,23 +20,20 @@ def test_on_v6(host: str, port: int, username: str, password: str, private_key: 
     client = v6client.Client(host, port, verbose=True)
 
     client.authenticate(username, password)
-    client.setup_encryption(private_key)
+    client.setup_encryption(None)
 
     # Get organizations
-    all_organizations = client.collaboration.list()[0]['organizations']
-    org_ids = []
+    active_nodes = client.node.list(is_online=True)
+    active_nodes = active_nodes['data']
 
-    for o in all_organizations:
-        org = client.organization.get(o['id'])
-
-        if org['nodes']:
-            org_ids.append(o['id'])
+    org_ids = [n['organization']['id'] for n in active_nodes]
 
     print(org_ids)
     master_node = org_ids[0]
+    other_nodes = org_ids[1:]
 
-    n2nclient = N2NDiagnosticsClient(client)
-    task = n2nclient.echo(master_node, collaboration_id, exclude)
+    n2nclient = N2NDiagnosticsClient(client, IMAGE)
+    task = n2nclient.echo(master_node, collaboration_id, other_nodes)
 
     print(task)
 

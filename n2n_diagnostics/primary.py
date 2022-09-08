@@ -40,7 +40,7 @@ def wait(client: ContainerClient, data, other_nodes, **kwargs):
     sleep(ENDLESS_SLEEP)
 
 
-def try_echo(client, other_nodes):
+def try_echo(client: ContainerClient, other_nodes):
     #ids = get_secondary_organizations(client, exclude_orgs)
     # The input fot the algorithm is the same for all organizations
     # in this case
@@ -49,7 +49,7 @@ def try_echo(client, other_nodes):
         "method": "some_example_method",
     }
     # create a new task for all organizations in the collaboration.
-    info("Dispatching node-tasks")
+    info(f"Dispatching node-tasks to organizations {other_nodes}")
     task = client.create_new_task(input_={'method': ECHO_TASK}, organization_ids=other_nodes)
     info(f'Waiting {WAIT} seconds for the algorithm containers to boot up...')
 
