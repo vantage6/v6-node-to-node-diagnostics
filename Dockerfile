@@ -1,5 +1,5 @@
 # basic python3 image as base
-FROM python:3.9-alpine
+FROM continuumio/miniconda3
 
 # This is a placeholder that should be overloaded by invoking
 # docker build with '--build-arg PKG_NAME=...'
