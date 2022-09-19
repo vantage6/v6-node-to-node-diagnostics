@@ -34,14 +34,13 @@ def echo(client, data, other_nodes, **kwargs):
 
 
 def wait(client: ContainerClient, data, other_nodes, **kwargs):
-
     info("Dispatching node-tasks")
     task = client.create_new_task(input_={'method': WAIT_TASK}, organization_ids=other_nodes)
     sleep(ENDLESS_SLEEP)
 
 
 def try_echo(client: ContainerClient, other_nodes):
-    #ids = get_secondary_organizations(client, exclude_orgs)
+    # ids = get_secondary_organizations(client, exclude_orgs)
     # The input fot the algorithm is the same for all organizations
     # in this case
     info("Defining input parameters")
@@ -54,12 +53,14 @@ def try_echo(client: ContainerClient, other_nodes):
     info(f'Waiting {WAIT} seconds for the algorithm containers to boot up...')
 
     # Ip address and port of algorithm can be found in results model
-    addresses = _await_port_numbers(client, task.get('id'))
+    num_nodes = len(other_nodes)
+    addresses = _await_port_numbers(client, task.get('id'), num_nodes=num_nodes)
     succeeded_echos = []
     info(f'Echoing to {len(addresses)} algorithms...')
 
-    for ip, port in addresses:
-
+    for a in addresses:
+        ip = a['ip']
+        port = a['port']
         info(f'Sending message to {ip}:{port}')
         succeeded_echos.append(_check_echo(ip, port))
 
@@ -67,10 +68,10 @@ def try_echo(client: ContainerClient, other_nodes):
     return succeeded_echos
 
 
-def _await_port_numbers(client:ContainerClient, task_id):
+def _await_port_numbers(client: ContainerClient, task_id, num_nodes):
     result_objects = client.get_algorithm_addresses(task_id=task_id)
     c = 0
-    while len(list(_get_available_addresses(result_objects))) < len(result_objects):
+    while len(result_objects) < num_nodes:
         if c >= RETRY:
             info('Cannot contact all organizations!')
             break
@@ -80,10 +81,10 @@ def _await_port_numbers(client:ContainerClient, task_id):
         c += 1
         sleep(4)
 
-    return list(_get_available_addresses(result_objects))
+    return result_objects
 
 
-def _get_available_addresses(result_objects)  -> Tuple[int, str]:
+def _get_available_addresses(result_objects) -> Tuple[int, str]:
     for r in result_objects:
         ip, port = _get_address_from_result(r)
         if port:
