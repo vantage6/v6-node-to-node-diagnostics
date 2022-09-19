@@ -28,8 +28,8 @@ n2nclient = N2NDiagnosticsClient(client)
 
 # Master node should be the organization id of the node that you want to run the primary 
 # algorithm on
-# List any organizations from the collaboration that shouldn't participate as a list in exclude
-task = n2nclient.echo(master_node, collaboration_id, exclude)
+# Other nodes should be the nodes in the collaboration that you want the master_node to connect to.
+task = n2nclient.echo(master_node, collaboration_id, other_nodes)
 ```
 
 ## Read more
