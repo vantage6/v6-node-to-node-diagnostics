@@ -39,7 +39,7 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --tag ${{env.IMAGE_NAME}}
-        docker tag ${{env.IMAGE_NAME}} {{env.IMAGE_NAME}}:{{env.V6_TAG}}
+        docker tag ${{env.IMAGE_NAME}} ${{env.IMAGE_NAME}}:${{env.V6_TAG}}
 
     - name: Push the Docker images
       run: |
