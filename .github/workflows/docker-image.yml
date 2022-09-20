@@ -44,6 +44,6 @@ jobs:
     - name: Push the Docker images
       run: |
         docker push $IMAGE_NAME
-        docker push {{env.IMAGE_NAME}}:{{env.V6_TAG}}
+        docker push ${{env.IMAGE_NAME}}:${{env.V6_TAG}}
       
       
