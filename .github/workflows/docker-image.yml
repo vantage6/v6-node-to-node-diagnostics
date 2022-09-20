@@ -4,8 +4,6 @@ on:
   push:
     branches: [ master ]
 
-
-
 jobs:
 
   docker-push:
@@ -23,11 +21,20 @@ jobs:
         registry: ${{env.HARBOR_SERVER}}
         username: ${{secrets.HARBOR_USER}}
         password: ${{secrets.HARBOR_PASSWORD}}
-    
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag ${{env.IMAGE_NAME}}
 
-    - name: Push the Docker image
-      run: docker push $IMAGE_NAME
+    - name: Get vantage6-client version
+      run: |
+        V6_VERSION=pip list --format=freeze|grep vantage6-client|sed -e 's/[^=]*==\(.*\)/\1/'
+        echo V6_TAG=v6-v$V6_VERSION >> $GITHUB_ENV
+
+    - name: Build the Docker image
+      run: |
+        docker build . --file Dockerfile --tag ${{env.IMAGE_NAME}}
+        docker tag ${{env.IMAGE_NAME}} {{env.IMAGE_NAME}}:{{env.V6_TAG}}
+
+    - name: Push the Docker images
+      run: |
+        docker push $IMAGE_NAME
+        docker push {{env.IMAGE_NAME}}:{{env.V6_TAG}}
       
       
