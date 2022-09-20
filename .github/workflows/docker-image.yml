@@ -23,7 +23,7 @@ jobs:
 
     - name: Get vantage6-client version
       run: |
-        V6_VERSION=poetry run pip list --format=freeze|grep vantage6-client|sed -e 's/[^=]*==\(.*\)/\1/'
+        V6_VERSION=$(poetry run pip list --format=freeze|grep vantage6-client|sed -e 's/[^=]*==\(.*\)/\1/')
         echo V6_TAG=v6-v$V6_VERSION >> $GITHUB_ENV
     
     - name: Docker Login
