@@ -37,12 +37,12 @@ jobs:
 
     - name: Build the Docker image
       run: |
-        docker build . --file Dockerfile --tag ${{secrets.IMAGE_NAME}}
-        docker tag ${{secrets.IMAGE_NAME}} ${{env.IMAGE_NAME}}:${{env.V6_TAG}}
+        docker build . --file Dockerfile --tag ${{env.IMAGE_NAME}}
+        docker tag ${{env.IMAGE_NAME}} ${{env.IMAGE_NAME}}:${{env.V6_TAG}}
 
     - name: Push the Docker images
       run: |
-        docker push ${{secrets.IMAGE_NAME}}
-        docker push ${{secrets.IMAGE_NAME}}:${{env.V6_TAG}}
+        docker push ${{env.IMAGE_NAME}}
+        docker push ${{env.IMAGE_NAME}}:${{env.V6_TAG}}
       
       
