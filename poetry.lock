@@ -467,7 +467,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "vantage6-client"
-version = "3.3.5"
+version = "3.3.6"
 description = "Vantage6 client"
 category = "main"
 optional = false
@@ -480,11 +480,11 @@ pyfiglet = "0.8.post1"
 PyJWT = "2.4.0"
 requests = "2.25.1"
 SPARQLWrapper = "1.8.5"
-vantage6-common = "3.3.5"
+vantage6-common = "3.3.6"
 
 [[package]]
 name = "vantage6-common"
-version = "3.3.5"
+version = "3.3.6"
 description = "Vantage6 common"
 category = "main"
 optional = false
@@ -517,7 +517,7 @@ test = ["websockets"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "8eeba2a7315a730f7b47197eff5d3930518d2a0a4af2c47df5f0c452e0a37975"
+content-hash = "494b23a4da88194374cbe1925f3d7c328e4d9cffa6efabbe224f26c228ef8c5d"
 
 [metadata.files]
 appdirs = [
@@ -773,12 +773,12 @@ urllib3 = [
     {file = "urllib3-1.26.12.tar.gz", hash = "sha256:3fa96cf423e6987997fc326ae8df396db2a8b7c667747d47ddd8ecba91f4a74e"},
 ]
 vantage6-client = [
-    {file = "vantage6-client-3.3.5.tar.gz", hash = "sha256:5dde0690dbf9c4c01088471384b63589133f05a27c2d7acb4e57fbb56f49367f"},
-    {file = "vantage6_client-3.3.5-py3-none-any.whl", hash = "sha256:881c9e8e2b2d21c9e166ae00c2904d6c08764ab797781f35aa659b08c7a000a3"},
+    {file = "vantage6-client-3.3.6.tar.gz", hash = "sha256:0989e90cd9d59c24ca016786724da24001f5f374816077976b2255776fa2cdc6"},
+    {file = "vantage6_client-3.3.6-py3-none-any.whl", hash = "sha256:02eb71543e29828f361552f8ae55b6b2593ea141de919ad4a68eb739a69199f4"},
 ]
 vantage6-common = [
-    {file = "vantage6-common-3.3.5.tar.gz", hash = "sha256:cb2310e61bdac6cdf20ebee1e6db1e9b5abc1db116d6e51e29d32144af684d18"},
-    {file = "vantage6_common-3.3.5-py3-none-any.whl", hash = "sha256:0027a748458e1aceba604f1fe8d01970d60358350630f4217eba8a12ea9091bb"},
+    {file = "vantage6-common-3.3.6.tar.gz", hash = "sha256:18ae6e186e91a0ce99bab7f75184c8bd9bcd766496408ea1bfb5c4084285d1f4"},
+    {file = "vantage6_common-3.3.6-py3-none-any.whl", hash = "sha256:a9fff03584060f01064d8f1aa3a5a178b783d5d53a13298904177e2f0ad9d57c"},
 ]
 websocket-client = [
     {file = "websocket-client-1.4.1.tar.gz", hash = "sha256:f9611eb65c8241a67fb373bef040b3cf8ad377a9f6546a12b620b6511e8ea9ef"},
