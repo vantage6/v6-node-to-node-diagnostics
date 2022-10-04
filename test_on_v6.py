@@ -10,7 +10,8 @@ from n2n_diagnostics.client import N2NDiagnosticsClient
 RETRY = 10
 SLEEP = 10
 DEFAULT_METHOD = 'echo'
-TEST_IMAGE = 'harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics:test'
+TEST_IMAGE = 'harbor2.vantage6.ai/algorithms/n2n-diagnostics:test'
+
 
 def test_on_v6(host: str, port: int, username: str, password: str, private_key: str,
                collaboration_id: int, *exclude, method: str = DEFAULT_METHOD):
