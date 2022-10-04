@@ -1,6 +1,6 @@
 import vantage6.client as v6client
 
-IMAGE = 'harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics'
+IMAGE = 'harbor2.vantage6.ai/algorithms/n2n-diagnostics'
 
 
 class N2NDiagnosticsClient:
