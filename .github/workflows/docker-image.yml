@@ -5,11 +5,10 @@ on:
     branches: [ master ]
 
 jobs:
-
   docker-push:
     env:
-      IMAGE_NAME: "harbor.carrier-mu.src.surf-hosted.nl/carrier/n2n-diagnostics"
-      HARBOR_SERVER: "harbor.carrier-mu.src.surf-hosted.nl"
+      IMAGE_NAME: "harbor2.vantage6.ai/algorithms/n2n-diagnostics"
+      HARBOR_SERVER: "harbor2.vantage6.ai"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -43,7 +42,7 @@ jobs:
 
     - name: Push the Docker images
       run: |
-        docker push $IMAGE_NAME
+        docker push ${{env.IMAGE_NAME}}
         docker push ${{env.IMAGE_NAME}}:${{env.V6_TAG}}
       
       
