@@ -13,8 +13,8 @@ DEFAULT_METHOD = 'echo'
 TEST_IMAGE = 'harbor2.vantage6.ai/algorithms/n2n-diagnostics:test'
 
 
-def test_on_v6(host: str, port: int, username: str, password: str, private_key: str,
-               collaboration_id: int, *exclude, method: str = DEFAULT_METHOD):
+def test_on_v6(host: str, port: int, username: str, password: str, collaboration_id: int, *,
+               private_key: str = None, method: str = DEFAULT_METHOD):
     client = v6client.Client(host, port, verbose=True)
 
     client.authenticate(username, password)

@@ -17,11 +17,11 @@ import traceback
 
 MESSAGE = b'Hello Python\n'
 ECHO_TASK = 'echo'
-WAIT = 4
+WAIT = 5
 TIMEOUT = 20
 ENDLESS_SLEEP = 10000
 WAIT_TASK = 'wait'
-RETRY = 10
+RETRY = 20
 
 
 def echo(client, data, other_nodes, **kwargs):
