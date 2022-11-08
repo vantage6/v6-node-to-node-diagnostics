@@ -5,6 +5,8 @@ FROM continuumio/miniconda3
 # docker build with '--build-arg PKG_NAME=...'
 ARG PKG_NAME="n2n_diagnostics"
 
+RUN apt update &&  apt install -y iproute2 traceroute iputils-ping curl
+
 # install federated algorithm
 COPY . /app
 RUN pip install /app
