@@ -33,12 +33,6 @@ def echo(client, data, other_nodes, **kwargs):
         raise e
 
 
-def wait(client: ContainerClient, data, other_nodes, **kwargs):
-    info("Dispatching node-tasks")
-    task = client.create_new_task(input_={'method': WAIT_TASK}, organization_ids=other_nodes)
-    sleep(ENDLESS_SLEEP)
-
-
 def try_echo(client: ContainerClient, other_nodes):
     # ids = get_secondary_organizations(client, exclude_orgs)
     # The input fot the algorithm is the same for all organizations
