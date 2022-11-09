@@ -9,12 +9,13 @@ from n2n_diagnostics.client import N2NDiagnosticsClient
 
 RETRY = 10
 SLEEP = 10
-DEFAULT_METHOD = 'echo'
-TEST_IMAGE = 'harbor2.vantage6.ai/algorithms/n2n-diagnostics:test'
+ECHO = 'echo'
+WAIT = 'wait'
+TEST_IMAGE = 'harbor2.vantage6.ai/algorithms/n2n-diagnostics'
 
 
 def test_on_v6(host: str, port: int, username: str, password: str, collaboration_id: int, *,
-               private_key: str = None, method: str = DEFAULT_METHOD):
+               private_key: str = None, method: str = ECHO):
     client = v6client.Client(host, port, verbose=True)
 
     client.authenticate(username, password)
@@ -30,10 +31,16 @@ def test_on_v6(host: str, port: int, username: str, password: str, collaboration
 
     print(f' Active nodes{org_ids}')
     master_node = org_ids[0]
-    other_nodes = org_ids[1:]
+    other_nodes = org_ids
 
     n2nclient = N2NDiagnosticsClient(client)
-    task = n2nclient.echo(master_node, collaboration_id, other_nodes)
+
+    task = None
+
+    if method == ECHO:
+        task = n2nclient.echo(master_node, collaboration_id, other_nodes)
+    elif method == WAIT:
+        task = n2nclient.wait(org_ids, collaboration_id)
 
     print(task)
 

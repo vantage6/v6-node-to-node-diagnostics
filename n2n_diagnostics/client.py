@@ -19,3 +19,12 @@ class N2NDiagnosticsClient:
                                                   'other_nodes': other_nodes}})
 
         return task
+
+    def wait(self, nodes, collaboration_id):
+        task = self.client.task.create(collaboration=collaboration_id,
+                                       organizations=nodes,
+                                       name='test_wait',
+                                       image=self.image, description='test',
+                                       input={'method': 'wait', 'master': False})
+
+        return task
