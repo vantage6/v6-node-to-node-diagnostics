@@ -72,6 +72,7 @@ def _await_port_numbers(client: ContainerClient, task_id, num_nodes):
 
         info('Polling results for port numbers...')
         result_objects = client.get_algorithm_addresses(task_id=task_id)
+        info(str(result_objects))
         c += 1
         sleep(4)
 

@@ -5,15 +5,17 @@ IMAGE = 'harbor2.vantage6.ai/algorithms/n2n-diagnostics'
 
 class N2NDiagnosticsClient:
 
-    def __init__(self, client: v6client.Client, image=IMAGE):
+    def __init__(self, client: v6client.Client,*, image=IMAGE, tag:str='latest'):
         self.client = client
         self.image = image
+        self.tag = tag
+        self.tagged_image = f'{image}:{tag}'
 
     def echo(self, master_node, collaboration_id, other_nodes):
         task = self.client.task.create(collaboration=collaboration_id,
                                        organizations=[master_node],
                                        name='test_echo',
-                                       image=self.image, description='test',
+                                       image=self.tagged_image, description='test',
                                        input={'method': 'echo', 'master': True,
                                               'kwargs': {
                                                   'other_nodes': other_nodes}})

@@ -15,7 +15,8 @@ TEST_IMAGE = 'harbor2.vantage6.ai/algorithms/n2n-diagnostics'
 
 
 def test_on_v6(host: str, port: int, username: str, password: str, collaboration_id: int, *,
-               private_key: str = None, method: str = ECHO):
+               private_key: str = None, method: str = ECHO, image: str = TEST_IMAGE,
+               tag: str = 'latest'):
     client = v6client.Client(host, port, verbose=True)
 
     client.authenticate(username, password)
@@ -31,9 +32,9 @@ def test_on_v6(host: str, port: int, username: str, password: str, collaboration
 
     print(f' Active nodes{org_ids}')
     master_node = org_ids[0]
-    other_nodes = org_ids
+    other_nodes = org_ids[1:]
 
-    n2nclient = N2NDiagnosticsClient(client)
+    n2nclient = N2NDiagnosticsClient(client, image=image, tag=tag)
 
     task = None
 
