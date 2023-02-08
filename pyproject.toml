@@ -6,7 +6,7 @@ authors = ["Djura Smits <djura.smits@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-vantage6-client = "^3.3.6"
+vantage6-client = "^3.3.7"
 
 [tool.poetry.dev-dependencies]
 clize = "^4.2.1"
