@@ -8,10 +8,17 @@ authors = ["Djura Smits <djura.smits@gmail.com>"]
 python = "^3.9"
 vantage6-client = "^3.3.7"
 
+
 [tool.poetry.dev-dependencies]
 clize = "^4.2.1"
 pytest = "^6.2.5"
+ruff = "^0.0.244"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+# Never enforce `E501` (line length violations).
+# Ignore star imports
+ignore = ["E501", "F403"]
