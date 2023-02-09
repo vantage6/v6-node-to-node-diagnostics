@@ -2,7 +2,6 @@
 Mock module that will provide placeholders for actual api calls to the vantage6 that aren't
 available yet.
 """
-from n2n_diagnostics import secondary
 
 MOCK_IP = '127.0.0.1'
 MOCK_PORT = 9999

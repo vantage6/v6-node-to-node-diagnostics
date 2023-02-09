@@ -38,9 +38,6 @@ def try_echo(client: ContainerClient, other_nodes):
     # The input fot the algorithm is the same for all organizations
     # in this case
     info("Defining input parameters")
-    input_ = {
-        "method": "some_example_method",
-    }
     # create a new task for all organizations in the collaboration.
     info(f"Dispatching node-tasks to organizations {other_nodes}")
     task = client.create_new_task(input_={'method': ECHO_TASK}, organization_ids=other_nodes)

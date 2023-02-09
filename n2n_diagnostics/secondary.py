@@ -20,7 +20,7 @@ def RPC_echo(data, *args, **kwargs):
 def RPC_wait(data, *args, **kwargs):
     try:
         sleep(ENDLESS_SLEEP)
-    except KeyboardInterrupt as e:
+    except KeyboardInterrupt:
         pass
     finally:
         return ''
