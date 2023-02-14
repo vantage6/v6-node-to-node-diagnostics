@@ -53,9 +53,13 @@ def try_echo(client: ContainerClient, other_nodes):
         ip = a['ip']
         port = a['port']
         info(f'Sending message to {ip}:{port}')
-        succeeded_echos.append(_check_echo(ip, port))
 
-        info(f'Succeeded echos: {succeeded_echos}')
+        try:
+            succeeded_echos.append(_check_echo(ip, port))
+        except socket.timeout:
+            info('Timeout! Skipping to next address.')
+
+    info(f'Succeeded echos: {succeeded_echos}')
     return succeeded_echos
 
 
