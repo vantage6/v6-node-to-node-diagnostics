@@ -8,9 +8,8 @@ When a return statement is reached the result is send to the central
 server after encryption.
 """
 import socket
-from typing import Any, Dict, Tuple
 
-from vantage6.client import ContainerClient
+from vantage6.client.algorithm_client import AlgorithmClient
 from vantage6.tools.util import info
 from time import sleep
 import traceback
@@ -33,19 +32,23 @@ def echo(client, data, other_nodes, **kwargs):
         raise e
 
 
-def try_echo(client: ContainerClient, other_nodes):
+def try_echo(client: AlgorithmClient, other_nodes):
     # ids = get_secondary_organizations(client, exclude_orgs)
     # The input fot the algorithm is the same for all organizations
     # in this case
     info("Defining input parameters")
     # create a new task for all organizations in the collaboration.
     info(f"Dispatching node-tasks to organizations {other_nodes}")
-    task = client.create_new_task(input_={'method': ECHO_TASK}, organization_ids=other_nodes)
+    task = client.task.create(
+        input_={'method': ECHO_TASK},
+        organization_ids=other_nodes
+    )
     info(f'Waiting {WAIT} seconds for the algorithm containers to boot up...')
 
     # Ip address and port of algorithm can be found in results model
     num_nodes = len(other_nodes)
-    addresses = _await_port_numbers(client, task.get('id'), num_nodes=num_nodes)
+    addresses = _await_port_numbers(client, task.get('id'),
+                                    num_nodes=num_nodes)
     succeeded_echos = []
     info(f'Echoing to {len(addresses)} algorithms...')
 
@@ -63,8 +66,8 @@ def try_echo(client: ContainerClient, other_nodes):
     return succeeded_echos
 
 
-def _await_port_numbers(client: ContainerClient, task_id, num_nodes):
-    result_objects = client.get_algorithm_addresses(task_id=task_id)
+def _await_port_numbers(client: AlgorithmClient, task_id, num_nodes):
+    result_objects = client.vpn.get_addresses(include_children=True)
     c = 0
     while len(result_objects) < num_nodes:
         if c >= RETRY:
@@ -72,7 +75,7 @@ def _await_port_numbers(client: ContainerClient, task_id, num_nodes):
             break
 
         info('Polling results for port numbers...')
-        result_objects = client.get_algorithm_addresses(task_id=task_id)
+        result_objects = client.vpn.get_addresses(include_children=True)
         info(str(result_objects))
         c += 1
         sleep(4)
@@ -80,27 +83,13 @@ def _await_port_numbers(client: ContainerClient, task_id, num_nodes):
     return result_objects
 
 
-def _get_available_addresses(result_objects) -> Tuple[int, str]:
-    for r in result_objects:
-        ip, port = _get_address_from_result(r)
-        if port:
-            yield ip, port
-
-
-def get_secondary_organizations(client, exclude_orgs):
-    organizations = client.get_organizations_in_my_collaboration()
+def get_secondary_organizations(client: AlgorithmClient, exclude_orgs):
+    organizations = client.organization.list()
     info(str(exclude_orgs))
     ids = [organization.get('id') for organization in organizations]
     if exclude_orgs:
         ids = [i for i in ids if i not in exclude_orgs]
     return ids
-
-
-def _get_address_from_result(result: Dict[str, Any]) -> Tuple[str, int]:
-    address = result['ip']
-    port = result['port']
-
-    return address, port
 
 
 def _check_echo(host, port):
