@@ -7,7 +7,7 @@ import vantage6.client as v6client
 
 from n2n_diagnostics.client import N2NDiagnosticsClient
 
-RETRY = 50
+RETRY = 10
 SLEEP = 10
 ECHO = 'echo'
 WAIT = 'wait'
@@ -32,7 +32,7 @@ def test_on_v6(host: str, port: int, username: str, password: str, collaboration
 
     print(f' Active nodes{org_ids}')
     master_node = org_ids[0]
-    other_nodes = org_ids[0:]
+    other_nodes = org_ids
 
     n2nclient = N2NDiagnosticsClient(client, image=image, tag=tag)
 
