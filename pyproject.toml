@@ -5,8 +5,9 @@ description = ""
 authors = ["Djura Smits <djura.smits@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
-vantage6-client = "^3.3.7"
+python = "^3.10"
+vantage6-client = "3.9.0"
+setuptools = "^67.8.0"
 
 
 [tool.poetry.dev-dependencies]
